@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ModernWebApp</title>
+    </head>
+    <body>
+        <h1>Welcome HR</h1>
+	    <hr/>
+        <form>
+            <p>
+                <b>Dept ID</b><br/>
+                <input type="text" id="deptInput" required="required"/>
+                <input type="button" id="invoiceButton" value="Employee Details"/>
+            </p>
+        </form>
+        <p>
+            <span id="statusOutput"></span><br/>
+        </p>
+		<div id="ordersView" style="display:none">
+	    	<table border="1" id="ordersTable">
+				<thead>
+		    		<tr>
+						<th>Empno</th>
+						<th>Name</th>
+						<th>Sal</th>
+		    		</tr>
+	      		</thead>
+				<tbody>
+				</tbody>
+	    	</table>
+		</div>
+        <script>
+
+            let customerIdInput = document.getElementById("deptInput");
+            let statusOutput = document.getElementById("statusOutput");
+	    	let ordersTable = document.getElementById("ordersTable");
+	    	let ordersView = document.getElementById("ordersView");
+
+	    	function clearEmps(){
+				ordersView.style.display = "none";
+				while(ordersTable.rows.length > 1) 
+					ordersTable.deleteRow(1);
+	    	}
+
+     
+                document.getElementById("invoiceButton").onclick = async function(){
+				clearEmps();
+				let result = await doGetEmps(deptInput.value);
+				if(typeof result === 'string')
+		    		statusOutput.innerText = result;
+                else{
+                    statusOutput.innerText = "Employees of this Dept ";
+		    		for(const entry of result) {
+		    			let row = ordersTable.insertRow();
+		    			row.insertCell().innerText = entry.empNo;
+		    			row.insertCell().innerText = entry.ename;
+		    			row.insertCell().innerText = entry.sal;
+		    		}
+		    		ordersView.style.display = "block";
+				}
+			};
+
+        </script>
+		<script src="hrui.js"></script>
+    </body>
+</html>
+
